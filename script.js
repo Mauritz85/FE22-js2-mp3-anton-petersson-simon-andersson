@@ -70,13 +70,14 @@ function showProducts() {
         const productName = document.createElement('h3')
         productName.innerHTML = productsArray[i].name
         const productPrice = document.createElement('h2')
-        productPrice.innerHTML = productsArray[i].price
+        productPrice.innerHTML = productsArray[i].price + ' kr'
         const amountInput = document.createElement('input')
         amountInput.type = 'number';
         amountInput.placeholder = "0";
         amountInput.min = "0";
 
         const toCartBtn = document.createElement('button')
+        toCartBtn.setAttribute('class', 'btn btn-danger mt-2 btn-round ')
         toCartBtn.innerHTML = 'Add to cart'
         
         productCard.append(productName, productPrice, amountInput, toCartBtn)
@@ -96,8 +97,10 @@ function addToCart() {
             alert('Please provide amount')
         }
 
+
         const IndexOfProduct = productsNameArray.indexOf(event.target.parentNode.childNodes[1].innerText)
         console.log('indexofProduct: ' + IndexOfProduct)
+
 
         cartArray.push({
             imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
@@ -106,7 +109,6 @@ function addToCart() {
             amount: event.target.parentNode.childNodes[3].value,
             index: IndexOfProduct
         })
-
 
 
         if (productsArray[IndexOfProduct].inStock == 0) {
@@ -126,7 +128,10 @@ function addToCart() {
 
         cartAmount = cartArray.length
         const cartLink = document.getElementById('cart-link')
+
         cartLink.innerHTML = 'Cart(' + cartAmount + ')'
+
+
         console.log(cartArray)
         console.log(cartAmount)
         localStorage.setItem("cartArray", JSON.stringify(cartArray));
