@@ -1,3 +1,20 @@
+let cartAmount = 0
+let cartArray = []
+checkCart()
+function checkCart() {
+    if (localStorage.getItem("cartArray") === null) {
+    }
+    else {
+        cartArray = JSON.parse(localStorage.getItem("cartArray"))
+        cartAmount = cartArray.length
+        const cartLink = document.getElementById('cart-link')
+        cartLink.innerHTML = 'Cart(' + cartAmount + ')'
+    }
+}
+
+
+console.log('cartArray first: ' + cartArray)
+
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
 import { getDatabase, push, ref, onValue, set, update, get } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js"
 
@@ -28,12 +45,13 @@ async function getProducts() {
         productsNameArray.push(firebaseProducts.val()[i].name)
     }
 
-    console.log(productsArray)
+    console.log(productsArray[0])
     console.log(productsNameArray)
     showProducts(productsArray)
     addToCart(productsArray, productsNameArray)
 
 }
+
 getProducts()
 
 function showProducts() {
@@ -61,6 +79,7 @@ function showProducts() {
         const toCartBtn = document.createElement('button')
         toCartBtn.setAttribute('class', 'btn btn-danger mt-2 btn-round ')
         toCartBtn.innerHTML = 'Add to cart'
+        
         productCard.append(productName, productPrice, amountInput, toCartBtn)
 
     }
@@ -68,8 +87,7 @@ function showProducts() {
 
 }
 
-const cartArray = []
-let cartAmount = 0
+
 
 function addToCart() {
     const buttons = document.querySelectorAll('button')
@@ -78,23 +96,28 @@ function addToCart() {
         if (event.target.parentNode.childNodes[3].value == 0) {
             alert('Please provide amount')
         }
-        cartArray.push({
-            imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
-            name: event.target.parentNode.childNodes[1].innerText,
-            price: event.target.parentNode.childNodes[2].innerText,
-            amount: event.target.parentNode.childNodes[3].value
-        })
 
 
         const IndexOfProduct = productsNameArray.indexOf(event.target.parentNode.childNodes[1].innerText)
         console.log('indexofProduct: ' + IndexOfProduct)
-        if(productsArray[IndexOfProduct].inStock == 0){
-            alert('This item is out of stock')
+
+
+        cartArray.push({
+            imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
+            name: event.target.parentNode.childNodes[1].innerText,
+            price: event.target.parentNode.childNodes[2].innerText,
+            amount: event.target.parentNode.childNodes[3].value,
+            index: IndexOfProduct
+        })
+
+
+        if (productsArray[IndexOfProduct].inStock == 0) {
+            alert('Unfortunately,this item is out of stock')
         }
         else if (event.target.parentNode.childNodes[3].value > productsArray[IndexOfProduct].inStock) {
             alert('only ' + productsArray[IndexOfProduct].inStock + ' in stock')
         }
-        
+
         else {
             console.log(productsArray[IndexOfProduct].inStock)
             productsArray[IndexOfProduct].inStock = productsArray[IndexOfProduct].inStock - event.target.parentNode.childNodes[3].value
@@ -103,34 +126,25 @@ function addToCart() {
 
 
 
-        cartAmount++
+        cartAmount = cartArray.length
         const cartLink = document.getElementById('cart-link')
-       
-        cartLink.innerHTML = 'Cart('+cartAmount +')'
-        document.body.append(cartLink)
+
+        cartLink.innerHTML = 'Cart(' + cartAmount + ')'
+
+
         console.log(cartArray)
         console.log(cartAmount)
         localStorage.setItem("cartArray", JSON.stringify(cartArray));
 
         event.target.parentNode.childNodes[3].value = ''
-        
-        
+
+
 
     }
 
     ));
-    //cartArray.push({name:"John", imgURl:"Doe", age:50, eyeColor:"blue"})
+
 }
-
-
-
-const testArray = []
-/* const testObject = {
-    imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
-    name: event.target.parentNode.childNodes[1].innerText,
-    price: event.target.parentNode.childNodes[2].innerText,
-    amount: event.target.parentNode.childNodes[3].value
-}; */
 
 
 function addObject(array, object) {
@@ -141,20 +155,6 @@ function addObject(array, object) {
 
 
 
-
-console.log(testArray)
-
-
-
-
-
-
-
-function changeInStock(product, newStock) {
-    update(ref(db, 'products/' + product + '/'), {
-        inStock: newStock
-    });
-}
 
 
 
