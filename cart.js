@@ -1,6 +1,58 @@
-const cartArray = JSON.parse(localStorage.getItem("cartArray"));
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
+import { getDatabase, push, ref, onValue, set, update, get } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js"
 
-console.log(cartArray);
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyCsOpI3Ws8F_1BfQV4qspnjwsuDI0XavZw",
+    authDomain: "store-27853.firebaseapp.com",
+    databaseURL: "https://store-27853-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "store-27853",
+    storageBucket: "store-27853.appspot.com",
+    messagingSenderId: "1043701083439",
+    appId: "1:1043701083439:web:fb04134c5441ec912d45da"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+
+let productsArray = []
+let productsNameArray = []
+
+async function getProducts() {
+    const firebaseProducts = await get(ref(db, '/products/'))
+    for (let i = 0; i < firebaseProducts.val().length; i++) {
+        productsArray.push(firebaseProducts.val()[i])
+        productsNameArray.push(firebaseProducts.val()[i].name)
+    }
+
+    console.log(productsArray[0])
+
+}
+
+getProducts()
+
+
+let totalSum = 0
+let cartArray = []
+let cartNameArray = []
+
+checkCart()
+function checkCart() {
+    if (localStorage.getItem("cartArray") === null) {
+        alert('Cart is empty')
+    }
+    else {
+        cartArray = JSON.parse(localStorage.getItem("cartArray"))
+        for (let i = 0; i < cartArray.length; i++) {
+            cartNameArray.push(cartArray[i].name)
+
+        }
+        showCart()
+    }
+}
 
 
 function showCart() {
@@ -9,6 +61,7 @@ function showCart() {
         const cartItem = document.createElement('div')
         cartItem.classList.add('cart-item')
         cartContainer.append(cartItem)
+
         const imgContainer = document.createElement('div')
         imgContainer.classList.add('img-container')
         cartItem.append(imgContainer)
@@ -17,25 +70,100 @@ function showCart() {
         productImg.src = cartArray[i].imgUrl
         imgContainer.append(productImg)
         const productName = document.createElement('h3')
-        productName.innerHTML = cartArray[i].name
+        productName.innerText = cartArray[i].name
         const productPrice = document.createElement('p')
-        productPrice.innerHTML = cartArray[i].price
-        const productAmount = document.createElement('p')
-        productAmount.innerHTML = cartArray[i].amount
+        productPrice.innerText = cartArray[i].price
+        const AmountInput = document.createElement('input')
+        AmountInput.type = 'number'
+        AmountInput.min = "1";
+        AmountInput.value = cartArray[i].amount
         const itemTotal = document.createElement('h3')
+        const itemTotalSum = cartArray[i].price * cartArray[i].amount
         itemTotal.innerHTML = cartArray[i].price * cartArray[i].amount
 
+        const removeItemBtn = document.createElement('button')
+        removeItemBtn.innerHTML = 'Remove item'
+        cartItem.append(productName, productPrice, AmountInput, itemTotal, removeItemBtn)
+        totalSum = totalSum + itemTotalSum
 
-        const removeItem = document.createElement('button')
-        removeItem.innerHTML = 'Remove item'
-        cartItem.append(productName, productPrice, productAmount, itemTotal, removeItem)
 
     }
-
-    const showTotal = document.createElement('h1')
 
 
 }
 
-showCart()
+console.log('cartArrayIndex ' + cartArray[0].index)
+
+
+const totalContainer = document.getElementById('total-container')
+const showTotal = document.createElement('h1')
+showTotal.innerText = totalSum
+totalContainer.append(showTotal)
+
+
+const buyBtn = document.getElementById('buy-button')
+buyBtn.addEventListener('click', buyFunction)
+
+function changeInStock(index, newStock) {
+    update(ref(db, 'products/' + index + '/'), {
+        inStock: newStock
+    });
+}
+
+function buyFunction() {
+    for (let i = 0; i < cartArray.length; i++) {
+        console.log(productsArray[i].inStock)
+        const firebaseIndex = cartArray[i].index
+        const newStock = productsArray[firebaseIndex].inStock - cartArray[i].amount
+        productsArray[firebaseIndex].inStock = newStock
+        changeInStock(cartArray[i].index, newStock)
+
+    }
+
+    cartArray = []
+    localStorage.removeItem("cartArray",)
+    location.reload()
+
+}
+
+
+const buttons = document.querySelectorAll('button')
+buttons.forEach((button, index) => {
+    button.addEventListener('click', function() {
+        cartArray.splice(index, 1)
+        console.log(cartArray)
+        if(cartArray.length == 0){
+            localStorage.removeItem("cartArray")
+            location.reload()
+        }
+        else{
+        localStorage.setItem("cartArray", JSON.stringify(cartArray))
+        location.reload()}
+    })
+
+    
+
+});
+
+const inputs = document.querySelectorAll('input')
+inputs.forEach((input, index) => {
+    input.addEventListener('click', function() {
+        cartArray[index].amount = input.value
+        console.log(cartArray)
+        localStorage.setItem("cartArray", JSON.stringify(cartArray))
+        location.reload()
+    
+    })
+
+    
+
+});
+
+
+
+
+
+
+
+
 
