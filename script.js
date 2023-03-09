@@ -52,13 +52,14 @@ function showProducts() {
         const productName = document.createElement('h3')
         productName.innerHTML = productsArray[i].name
         const productPrice = document.createElement('h2')
-        productPrice.innerHTML = productsArray[i].price
+        productPrice.innerHTML = productsArray[i].price + ' kr'
         const amountInput = document.createElement('input')
         amountInput.type = 'number';
         amountInput.placeholder = "0";
         amountInput.min = "0";
 
         const toCartBtn = document.createElement('button')
+        toCartBtn.setAttribute('class', 'btn btn-danger mt-2 btn-round ')
         toCartBtn.innerHTML = 'Add to cart'
         productCard.append(productName, productPrice, amountInput, toCartBtn)
 
@@ -77,7 +78,6 @@ function addToCart() {
         if (event.target.parentNode.childNodes[3].value == 0) {
             alert('Please provide amount')
         }
-
         cartArray.push({
             imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
             name: event.target.parentNode.childNodes[1].innerText,
@@ -105,6 +105,7 @@ function addToCart() {
 
         cartAmount++
         const cartLink = document.getElementById('cart-link')
+       
         cartLink.innerHTML = 'Cart('+cartAmount +')'
         document.body.append(cartLink)
         console.log(cartArray)

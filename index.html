@@ -4,14 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style/style.css">
+    
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+    <script defer src="/node_modules/@fortawesome/fontawesome-free/js/solid.js"></script>
+    <script defer src="/node_modules/@fortawesome/fontawesome-free/js/brands.js"></script>
+    <script defer src="/node_modules/@fortawesome/fontawesome-free/js/fontawesome.js"></script>
     <script type="module" src="./script.js" defer></script>
+    <link rel="stylesheet" href="style/style.css">
+    
     
 </head>
 <body>
-<div id="product-container" class="product-container"></div>
-<a href="cart.html" id="cart-link">Cart</a>
+<div class="d-flex justify-content-end">
+    <a href="cart.html" id="cart-link"><i class="fa-solid fa-cart-shopping display-5 m-5"></i></a>
+</div>
+<section>
+    <div id="product-container" class=" border-top-0 d-flex justify-content-center gap-5 m-5 flex-wrap"></div>
+</section>
 
-    
+
 </body>
 </html>
