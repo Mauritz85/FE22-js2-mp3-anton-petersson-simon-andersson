@@ -1,5 +1,10 @@
+import { ref, get } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js"
+import { db } from "./modules/firebase.js"
+
+
 let cartAmount = 0
 let cartArray = []
+
 checkCart()
 function checkCart() {
     if (localStorage.getItem("cartArray") === null) {
@@ -13,30 +18,8 @@ function checkCart() {
 }
 
 
-console.log('cartArray first: ' + cartArray)
-
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
-import { getDatabase, push, ref, onValue, set, update, get } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-database.js"
-
-
-const firebaseConfig = {
-
-    apiKey: "AIzaSyCsOpI3Ws8F_1BfQV4qspnjwsuDI0XavZw",
-    authDomain: "store-27853.firebaseapp.com",
-    databaseURL: "https://store-27853-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "store-27853",
-    storageBucket: "store-27853.appspot.com",
-    messagingSenderId: "1043701083439",
-    appId: "1:1043701083439:web:fb04134c5441ec912d45da"
-
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-
-const productsArray = []
-const productsNameArray = []
+let productsArray = []
+let productsNameArray = []
 
 async function getProducts() {
     const firebaseProducts = await get(ref(db, '/products/'))
@@ -45,8 +28,6 @@ async function getProducts() {
         productsNameArray.push(firebaseProducts.val()[i].name)
     }
 
-    console.log(productsArray[0])
-    console.log(productsNameArray)
     showProducts(productsArray)
     addToCart(productsArray, productsNameArray)
 
@@ -79,7 +60,7 @@ function showProducts() {
         const toCartBtn = document.createElement('button')
         toCartBtn.setAttribute('class', 'btn btn-danger mt-2 btn-round ')
         toCartBtn.innerHTML = 'Add to cart'
-        
+
         productCard.append(productName, productPrice, amountInput, toCartBtn)
 
     }
@@ -93,69 +74,47 @@ function addToCart() {
     const buttons = document.querySelectorAll('button')
     buttons.forEach(button => button.addEventListener("click", function (event) {
         event.preventDefault()
+        
         if (event.target.parentNode.childNodes[3].value == 0) {
-            alert('Please provide amount')
+            alert('Please select amount')
         }
 
-
-        const IndexOfProduct = productsNameArray.indexOf(event.target.parentNode.childNodes[1].innerText)
-        console.log('indexofProduct: ' + IndexOfProduct)
-
-
-        cartArray.push({
-            imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
-            name: event.target.parentNode.childNodes[1].innerText,
-            price: event.target.parentNode.childNodes[2].innerText,
-            amount: event.target.parentNode.childNodes[3].value,
-            index: IndexOfProduct
-        })
-
-
-        if (productsArray[IndexOfProduct].inStock == 0) {
-            alert('Unfortunately,this item is out of stock')
-        }
-        else if (event.target.parentNode.childNodes[3].value > productsArray[IndexOfProduct].inStock) {
-            alert('only ' + productsArray[IndexOfProduct].inStock + ' in stock')
-        }
 
         else {
-            console.log(productsArray[IndexOfProduct].inStock)
-            productsArray[IndexOfProduct].inStock = productsArray[IndexOfProduct].inStock - event.target.parentNode.childNodes[3].value
-            console.log(productsArray[IndexOfProduct].inStock)
+            const IndexOfProduct = productsNameArray.indexOf(event.target.parentNode.childNodes[1].innerText)
+            
+            cartArray.push({
+                imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
+                name: event.target.parentNode.childNodes[1].innerText,
+                price: event.target.parentNode.childNodes[2].innerText,
+                amount: event.target.parentNode.childNodes[3].value,
+                index: IndexOfProduct
+            })
+
+
+            if (productsArray[IndexOfProduct].inStock < 1) {
+                alert('Unfortunately, this item is out of stock')
+            }
+            else if (event.target.parentNode.childNodes[3].value > productsArray[IndexOfProduct].inStock) {
+                alert('Unfortunately, there is only ' + productsArray[IndexOfProduct].inStock + 'items left in stock')
+            }
+
+            else {
+
+                productsArray[IndexOfProduct].inStock = productsArray[IndexOfProduct].inStock - event.target.parentNode.childNodes[3].value
+
+            }
+
+
+            cartAmount = cartArray.length
+            const cartLink = document.getElementById('cart-amount')
+            cartLink.innerText = cartAmount
+            localStorage.setItem("cartArray", JSON.stringify(cartArray));
+            event.target.parentNode.childNodes[3].value = ''
+
         }
-
-
-
-        cartAmount = cartArray.length
-        const cartLink = document.getElementById('cart-amount')
-
-        cartLink.innerText = cartAmount
-
-
-        console.log(cartArray)
-        console.log(cartAmount)
-        localStorage.setItem("cartArray", JSON.stringify(cartArray));
-
-        event.target.parentNode.childNodes[3].value = ''
-
-
-
     }
 
     ));
 
 }
-
-
-function addObject(array, object) {
-    array.push(object)
-}
-
-//addObject(testArray, testObject)
-
-
-
-
-
-
-//changeInStock(1, 4)
