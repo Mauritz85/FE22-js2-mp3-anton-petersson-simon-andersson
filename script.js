@@ -7,8 +7,8 @@ function checkCart() {
     else {
         cartArray = JSON.parse(localStorage.getItem("cartArray"))
         cartAmount = cartArray.length
-        const cartLink = document.getElementById('cart-link')
-        cartLink.innerHTML = 'Cart(' + cartAmount + ')'
+        const cartLink = document.getElementById('cart-amount')
+        cartLink.innerText = cartAmount
     }
 }
 
@@ -127,9 +127,9 @@ function addToCart() {
 
 
         cartAmount = cartArray.length
-        const cartLink = document.getElementById('cart-link')
+        const cartLink = document.getElementById('cart-amount')
 
-        cartLink.innerHTML = 'Cart(' + cartAmount + ')'
+        cartLink.innerText = cartAmount
 
 
         console.log(cartArray)
