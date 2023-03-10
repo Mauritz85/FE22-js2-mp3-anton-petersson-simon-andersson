@@ -70,20 +70,23 @@ function showCart() {
         productImg.src = cartArray[i].imgUrl
         imgContainer.append(productImg)
         const productName = document.createElement('h3')
-        productName.innerText = cartArray[i].name
-        const productPrice = document.createElement('p')
-        productPrice.innerText = cartArray[i].price
+        productName.innerText = cartArray[i].name + ', ' + cartArray[i].price + '.-';
+        // const productPrice = document.createElement('p')
+        // productPrice.innerText = cartArray[i].price
         const AmountInput = document.createElement('input')
         AmountInput.type = 'number'
         AmountInput.min = "1";
         AmountInput.value = cartArray[i].amount
         const itemTotal = document.createElement('h3')
         const itemTotalSum = cartArray[i].price * cartArray[i].amount
-        itemTotal.innerHTML = cartArray[i].price * cartArray[i].amount
+        itemTotal.innerHTML = 'Sum: ' + cartArray[i].price * cartArray[i].amount + ' kr'
 
         const removeItemBtn = document.createElement('button')
+        removeItemBtn.setAttribute('class', 'btn btn-danger mt-2 btn-round ')
         removeItemBtn.innerHTML = 'Remove item'
-        cartItem.append(productName, productPrice, AmountInput, itemTotal, removeItemBtn)
+        cartItem.append(productName,
+            //  productPrice,
+              AmountInput, itemTotal, removeItemBtn)
         totalSum = totalSum + itemTotalSum
 
 
@@ -97,7 +100,7 @@ console.log('cartArrayIndex ' + cartArray[0].index)
 
 const totalContainer = document.getElementById('total-container')
 const showTotal = document.createElement('h1')
-showTotal.innerText = totalSum
+showTotal.innerText = 'Total: ' + totalSum + ' kr'
 totalContainer.append(showTotal)
 
 

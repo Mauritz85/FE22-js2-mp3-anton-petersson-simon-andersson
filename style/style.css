@@ -26,7 +26,12 @@ body{
     background-color: goldenrod;
     color: white;
 } */
-
+#cart-container {
+    margin: 2rem;
+}
+#cart-link {
+    font-size: 3rem;
+}
 .cart-item{
     display: flex;
     align-items: center;
@@ -37,8 +42,8 @@ body{
     border-radius: 3px;
     margin: 10px 10px;
 }
-#cart-link {
-
+#cart-amount {
+    font-size: 1.5rem;
 }
 
 .product-card{
@@ -71,4 +76,5 @@ body{
 input{
     width: 3rem;
 }
+
 
