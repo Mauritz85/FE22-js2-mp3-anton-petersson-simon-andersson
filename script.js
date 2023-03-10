@@ -70,7 +70,7 @@ function showProducts() {
         const productName = document.createElement('h3')
         productName.innerHTML = productsArray[i].name
         const productPrice = document.createElement('h2')
-        productPrice.innerHTML = productsArray[i].price + ' kr'
+        productPrice.innerHTML = productsArray[i].price
         const amountInput = document.createElement('input')
         amountInput.type = 'number';
         amountInput.placeholder = "0";
