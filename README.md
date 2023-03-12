@@ -3,7 +3,7 @@
 ## Vegetable online-store
 
 ### Anton
-JS
+-JS
 
-## Simon
-CSS och HTML + JS-fixes
+### Simon
+-CSS, HTML + JS-fixes
