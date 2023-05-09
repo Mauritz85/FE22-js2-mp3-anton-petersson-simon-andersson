@@ -81,16 +81,8 @@ function addToCart() {
 
 
         else {
-            const IndexOfProduct = productsNameArray.indexOf(event.target.parentNode.childNodes[1].innerText)
             
-            cartArray.push({
-                imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
-                name: event.target.parentNode.childNodes[1].innerText,
-                price: event.target.parentNode.childNodes[2].innerText,
-                amount: event.target.parentNode.childNodes[3].value,
-                index: IndexOfProduct
-            })
-
+            const IndexOfProduct = productsNameArray.indexOf(event.target.parentNode.childNodes[1].innerText)
 
             if (productsArray[IndexOfProduct].inStock < 1) {
                 alert('Unfortunately, this item is out of stock')
@@ -100,6 +92,13 @@ function addToCart() {
             }
 
             else {
+                 cartArray.push({
+                imgUrl: event.target.parentNode.childNodes[0].firstChild.currentSrc,
+                name: event.target.parentNode.childNodes[1].innerText,
+                price: event.target.parentNode.childNodes[2].innerText,
+                amount: event.target.parentNode.childNodes[3].value,
+                index: IndexOfProduct
+            })
 
                 productsArray[IndexOfProduct].inStock = productsArray[IndexOfProduct].inStock - event.target.parentNode.childNodes[3].value
 
